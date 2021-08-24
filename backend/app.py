@@ -1,10 +1,11 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 import urllib3
 import json
 
-
 app = Flask(__name__)
 
+CORS(app)
 http = urllib3.PoolManager()
 
 @app.route('/')
