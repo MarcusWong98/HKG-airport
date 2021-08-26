@@ -1,22 +1,43 @@
+from datetime import datetime
+from functions import auth_for_airline_codes, get_hk_flights, get_airline_codes
 from flask import Flask, jsonify
 from flask_cors import CORS
-import urllib3
 import json
 
 app = Flask(__name__)
 
 CORS(app)
-http = urllib3.PoolManager()
 
 @app.route('/')
 def index():
 
-    r = http.request('GET', 'https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date=2021-08-23&lang=en&cargo=false&arrival=false')
+    date = datetime(2021, 9, 1)
 
-    print(type(r.data[0]))
+    real_date = str(date).split(' ')[0]
 
-    data = json.loads(r.data.decode('utf-8'))
+    print(real_date)
 
-    return jsonify({'data':data})
+    data = get_hk_flights(date)
+
+    print(data)
+
+    return jsonify({'data':data['flights'].pagination(maximum = 10).to_json()})
     
 
+@app.route('/auth')
+def auth():
+    # print(type(auth_for_airline_codes))
+
+
+    token = auth_for_airline_codes()
+   
+    print(token)
+
+    airline_codes = get_airline_codes(token = token)
+
+    
+
+    return jsonify({
+        "token": token,
+        "airline_codes": airline_codes
+    }) 
