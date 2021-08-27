@@ -8,14 +8,10 @@ app = Flask(__name__)
 
 CORS(app)
 
-@app.route('/')
+@app.route('/flights', methods = ['GET'])
 def index():
 
-    date = datetime(2021, 9, 1)
-
-    real_date = str(date).split(' ')[0]
-
-    print(real_date)
+    date = datetime.now()
 
     data = get_hk_flights(date)
 

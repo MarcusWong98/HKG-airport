@@ -9,7 +9,7 @@ class HK_flights:
 
     def pagination(self, maximum = int, page = 1):
 
-        first_page = maximum * page
+        first_page = maximum * (page - 1)
 
         last_page = first_page + maximum
 

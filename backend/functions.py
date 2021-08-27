@@ -30,11 +30,9 @@ def auth_for_airline_codes():
 
 def get_hk_flights(date = datetime):
 
-    real_date = str(date).split(' ')[0]
+    year, month, day = date.year, date.month, date.day
 
-    print(real_date)
-
-    url = f'https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date={real_date}&lang=en&cargo=false&arrival=false'
+    url = f'https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date={year}-{month}-{day}&lang=en&cargo=false&arrival=false'
 
     print(url)
 
@@ -58,6 +56,8 @@ def is_data_none(data):
         }
 
     else:
+        print(len(data[0]['list']))
+
         return{
             'success': True,
             'flights': HK_flights(
@@ -66,6 +66,8 @@ def is_data_none(data):
                 date = data[0]['date'],
                 flights= data[0]['list']
             )
+
+
         }
 
 def pagination(data, maximum = int, page = 1):
