@@ -30,13 +30,12 @@ def auth_for_airline_codes():
 
 def get_hk_flights(date = datetime):
 
-    real_date = str(date).split(' ')[0]
+    # real_date = str(date).split(' ')[0]
+    year, month, day = date.year, date.month, date.day
 
-    print(real_date)
+    url = f'https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date={year}-{month}-{day}&lang=en&cargo=false&arrival=false'
 
-    url = f'https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date={real_date}&lang=en&cargo=false&arrival=false'
-
-    print(url)
+    # print(url)
 
     r = requests.get(url)
 
@@ -49,6 +48,8 @@ def get_hk_flights(date = datetime):
 
 def is_data_none(data):
 
+    # print(data)
+
     if 'problemNo' in data:
         
         return{
@@ -58,23 +59,47 @@ def is_data_none(data):
         }
 
     else:
+        # print(data)
+
+        today_flights = data[0]
+
+        obj_flights = []
+
+        # print(today_flights)
+        for flights in today_flights['list']:
+
+            # print(flights)
+
+
+            for flight in flights['flight']:
+
+                # print(flight['airline'])
+
+                f = HK_flights(
+                    date = today_flights['date'],
+                    destination= flights['destination'][0],
+                    airline= flight['airline'],
+                    status= flights['status'],
+                    time = flights['time']
+                )
+
+                obj_flights.append(f)
+
         return{
             'success': True,
-            'flights': HK_flights(
-                arrival = data[0]['arrival'],
-                cargo = data[0]['cargo'],
-                date = data[0]['date'],
-                flights= data[0]['list']
-            )
+            'flights': obj_flights
         }
 
-def pagination(data, maximum = int, page = 1):
 
-    first_page = maximum * page
+def pagination(flights, maximum = int, page = 1):
+
+    first_page = maximum * (page - 1)
 
     last_page = first_page + maximum
 
-    return data[first_page:last_page]
+    flights = flights[first_page:last_page]
+
+    return flights
 
 
 def get_airline_codes(token):
@@ -88,3 +113,5 @@ def get_airline_codes(token):
     r_dict = r.json()
 
     return r_dict
+
+
