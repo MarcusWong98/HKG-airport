@@ -2,11 +2,12 @@ import React,{useState, useEffect} from 'react'
 import fetch_flights from '../functions'
 import { Button, Pagination, Table } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import restructure from '../restructure'
 
 
 export default function Card() {
 
-    const tHeaders = ['cargo', 'date', 'destination', 'airline', 'status']
+    const tHeaders = ['cargo', 'date', 'destination', 'flights', 'status']
 
 
     const [flights, setFlights] = useState({})
@@ -15,13 +16,8 @@ export default function Card() {
 
         const data = fetch_flights('GET')
 
-        const flight_data = {
-            'cargo': data['cargo'],
-            'date': data['date'],
-            // 'destination': data['flights']
-        }
 
-        setFlights([data])
+        setFlights({123:123})
 
     }, {})
 
